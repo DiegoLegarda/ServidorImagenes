@@ -13,10 +13,22 @@ const app = express();
 app.use(express.json());
 
 //Permitir acceso desde otras IP
-app.use(cors({
-    origin: 'http://localhost:5173', 
-    credentials: true 
-}));
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Permite el uso de cookies o credenciales
+};
+
+app.use(cors(corsOptions));
+
+
 
 // app.post('/api/imagenes', upload.single('imagen'),(req, res) => {
 //     console.log(req.body); // Aquí deberías ver los datos del formulario
