@@ -13,18 +13,21 @@ const app = express();
 app.use(express.json());
 
 //Permitir acceso desde otras IP
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:5173'];
-
-const corsOptions = {
+const allowedOrigins = [
+    'http://localhost:5173', // Origen de desarrollo
+    'https://proyecto-vite-two.vercel.app', // Origen de producción
+  ];
+  
+  app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Origen no permitido por CORS'));
+      }
     },
-    credentials: true, // Permite el uso de cookies o credenciales
-};
+    credentials: true, // Permitir cookies y encabezados con credenciales
+  }));
 
 app.use(cors(corsOptions));
 
